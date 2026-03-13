@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Siswa</title>
+</head>
+<body>
+    <style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+}
+
+input{
+    padding:5px;
+    margin:5px;
+}
+
+button{
+    padding:6px 12px;
+    background:#3498db;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius: 25px;
+    box-shadow: #2980b9
+}
+
+button:hover{
+    background:#2980b9;
+}
+
+table{
+    margin-top:20px;
+    border-collapse:collapse;
+    background:white;
+}
+
+th, td{
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#333;
+    color:white;
+}
+
+td button{
+    background:red;
+    border-radius: 25px;
+}
+    </style>
+
+<center>
+
+<h2>Input Data Siswa</h2>
+
+<input type="text" id="nama" placeholder="Nama">
+<input type="text" id="kelas" placeholder="Kelas">
+<input type="number" id="nilai" placeholder="Nilai">
+
+<button onclick="simpanData()">Simpan</button>
+
+<h2>Data Siswa</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Nilai</th>
+            <th>Grade</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody id="tabelSiswa">
+    </tbody>
+
+</table>
+
+</center>
+
+<script>
+
+function simpanData(){
+
+    let nama = document.getElementById("nama").value;
+    let kelas = document.getElementById("kelas").value;
+    let nilai = Number(document.getElementById("nilai").value);
+
+    let grade = "";
+
+    let status = "";
+
+    if(nilai >= 100){
+        grade = "setara fazriel";
+    }
+    else if(nilai >= 90){
+        grade = "A";
+    }
+    else if(nilai >= 80){
+        grade = "B";
+    }
+    else if(nilai >= 70){
+        grade = "C";
+    }
+    else if(nilai >= 60){
+        grade = "D";
+    }
+    else{
+        grade = "E";
+    }
+
+    if(nilai >= 75){
+        status = "Lulus";
+    }
+    else{
+        status = "Tidak Lulus";
+    }
+    if(nilai >= 100){
+        status = "setara fazriel";
+    }
+    let data = {
+        nama:nama,
+        kelas:kelas,
+        nilai:nilai,
+        grade:grade,
+        status:status
+    };
+
+    let siswa = JSON.parse(localStorage.getItem("hant")) || [];
+
+    siswa.push(data);
+
+    localStorage.setItem("hant", JSON.stringify(siswa));
+
+    tampilkanData();
+}
+
+function tampilkanData(){
+
+    let tabel = document.getElementById("tabelSiswa");
+    tabel.innerHTML = "";
+
+    let siswa = JSON.parse(localStorage.getItem("hant")) || [];
+
+    siswa.forEach(function(data, index){
+
+        tabel.innerHTML +=
+        "<tr>" +
+        "<td><strong>"+data.nama+"</strong></td>" +
+        "<td>"+data.kelas+"</td>" +
+        "<td>"+data.nilai+"</td>" +
+        "<td><strong>"+data.grade+"</strong></td>" +
+        "<td><strong>"+data.status+"</strong></td>" +
+        "<td><button onclick='hapusBaris("+index+")'>Hapus</button></td>" +
+        "</tr>";
+
+    });
+
+}
+
+function hapusBaris(index){
+
+    let siswa = JSON.parse(localStorage.getItem("hant"));
+
+    siswa.splice(index,1);
+
+    localStorage.setItem("hant", JSON.stringify(siswa));
+
+    tampilkanData();
+}
+
+tampilkanData();
+
+
+
+</script>
+
+</body>
+</html>
